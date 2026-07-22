@@ -1,0 +1,5 @@
+dspy-ai
+# dataiku-api-client to be installed via local .tar.gz
+
+# Test dependencies
+pytest
