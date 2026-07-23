@@ -147,7 +147,10 @@ print(lm.history[-1]["usage"])
 
 ## Running tests
 
-Unit tests mock all Dataiku API calls and run without a DSS instance:
+Unit tests mock all Dataiku API calls and run without a DSS instance. The
+real `dataiku` package isn't required either — `conftest.py` installs a
+minimal stub automatically if it isn't already importable, purely so that
+`dspy_dku` (which imports `dataiku` at module level) can be loaded:
 
 ```bash
 pytest tests/unit/ -v

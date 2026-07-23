@@ -111,8 +111,15 @@ class TestDataikuLMCall:
     # ------------------------------------------------------------------
 
     def test_mesh_failure_raises_runtime_error(self, mock_mesh_failure, sample_messages):
+        # _MeshClient.complete() is the layer that inspects resp.success and
+        # raises; since this test replaces _mesh with a bare mock, it must
+        # simulate that same behavior via side_effect rather than returning
+        # the failure response (which _MeshClient would never actually do).
         mesh = MagicMock()
-        mesh.complete.return_value = mock_mesh_failure
+        mesh.complete.side_effect = RuntimeError(
+            f"Dataiku LLM Mesh call failed (connection='test-connection'): "
+            f"{mock_mesh_failure.error_message}"
+        )
         lm = _make_lm(mesh)
         with pytest.raises(RuntimeError, match="Mesh call failed"):
             lm(messages=sample_messages)
